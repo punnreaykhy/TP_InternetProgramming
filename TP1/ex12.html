@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .wrapper{
+            min-width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 70%;
+            height: 70vh;
+            border: 3px solid black;
+        }
+        .pink{
+            width: 10%;
+            height: 50%;
+            background-color: pink;
+            position: absolute;
+            top: 50%;
+            left: 15%;
+            transform: translate(0,-50%);
+        }
+        .green-head{
+            width: 30%;
+            height: 10%;
+            background-color: green;
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%);
+        }
+        .green{
+            width: 10%;
+            height: 50%;
+            background-color: green;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .yellow-head{
+            width: 15%;
+            height: 10%;
+            background-color: yellow;
+            position: absolute;
+            top: 25%;
+            right: 5%;
+            
+        }
+        .yellow{
+            width: 10%;
+            height: 50%;
+            background-color: yellow;
+            position: absolute;
+            top: 50%;
+            right: 15%;
+            transform: translate(0,-50%);
+        }
+        .yellow-tail{
+            width: 15%;
+            height: 10%;
+            background-color: yellow;
+            position: absolute;
+            bottom: 25%;
+            right: 5%;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="pink"></div>
+            <div class="green-head"></div>
+            <div class="green"></div>
+            <div class="yellow"></div>
+            <div class="yellow-head"></div>
+            <div class="yellow-tail"></div>
+        </div>
+    </div>
+    
+
+</body>
+</html>

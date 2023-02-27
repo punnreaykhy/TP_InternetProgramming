@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP3-ex4</title>
+    <script src="tailwind.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="containerC flex space-x-1 w-full min-h-screen">
+        <div class="bg-gray-200 w-1/4 p-3">
+            <div class="formAdd">
+                <label for="name">Name:</label>
+                <input type="text" placeholder="c programming" name="name" id="add-name">
+                <label for="category">Category:</label>
+                <input type="text" placeholder="coding" name="category" id="add-category">
+                <label for="price">Price:</label>
+                <input type="text" placeholder="1,000 riel" name="price" id="add-price">
+                <button class="mt-1" id="add-btn" onclick="app.Add()">Add</button>
+            </div>
+        </div>
+
+        <div id="listBox" class="listBox bg-gray-200 w-3/4 grid grid-cols-4 gap-2 text-sm">
+            <!-- display list of books here -->
+        </div>
+
+    </div>
+
+
+    <script src="app.js"></script>
+</body>
+
+</html>

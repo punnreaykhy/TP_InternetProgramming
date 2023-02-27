@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .myButton button{
+            font-weight: bold;
+            border: 2px solid black;
+            border-radius: 5px;
+            padding: 8px 12px;
+        }
+        .myButton button:hover{
+            color: white;
+            background-color: black;
+        }
+        .content h3{
+            color: white;
+            font-weight: bold;
+            font-size: 3rem;
+        }
+        #colorCode{
+            font-weight: bold;
+            font-size: 3rem;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="containerZ w-full min-h-screen bg-[#EEF2F6] p-5 flex justify-center">
+        <div class="content text-center bg-white w-[80%]">
+            <div class="text-left p-3 font-bold">Random Color Generator</div>
+            <div class="doGen h-[95%] pt-[6px]">
+                <div class="blackBG bg-black text-white m-[6px]">
+                    <h3>Background Color :</h3>
+                    <p id="colorCode">##</p>
+                </div>
+                <div class="myButton pb-2 pt-9">
+                    <button id="generate">GENERATE</button>
+                    <button id="reset">RESET</button>
+                </div>
+
+                <div class="genCon bg-white max-h-[60vh] overflow-auto p-2">
+                    <!-- List Color here -->
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        
+        class Color {
+            colorType = ''
+            records = []
+            constructor(type, records){
+                this.colorType = type
+                if(records) this.records = records
+            }
+
+            generate(){
+                this.records.push(this.getRandomNumber())
+            }
+
+            getRandomNumber(){
+                return Math.floor(Math.random()*16777215).toString(16);
+            }
+
+            getRecords(){
+                return this.records
+            }
+
+            reset(){
+                return this.records = []
+            }
+        }
+
+        FetchAll = function () {
+            var data = '';
+            if (myColor.getRecords().length > 0) {
+                for (i = 0; i < myColor.getRecords().length; i++) {
+                    data += `
+                    <div class="w-[5.5rem] flex items-center justify-between">#${myColor.getRecords()[i]} <div class="bg-[#${myColor.records[i]}] border border-black w-4 h-4"></div></div>
+                    `;
+                    document.getElementById("colorCode").innerHTML = `#${myColor.getRecords()[i]}`
+                    ChangeBG(myColor.getRecords()[i])
+                }
+            }
+            localStorage.setItem("generateColor", JSON.stringify(myColor.getRecords()));
+            return document.querySelector(".genCon").innerHTML = data;
+        };
+
+        ChangeBG = function (color){
+            document.getElementById("colorCode").style.color = "#" + color
+            document.querySelector(".doGen").style.backgroundColor = "#" + color
+        }
+
+        const getColors = localStorage.getItem("generateColor")
+        let myColor = new Color("hex", JSON.parse(getColors))
+        let genButton = document.getElementById('generate');
+        let resetButton = document.getElementById('reset');
+
+        genButton.addEventListener("click", function(){
+            myColor.generate()
+            FetchAll()
+        });
+
+        resetButton.addEventListener("click", function(){
+            document.getElementById("colorCode").innerHTML = ``
+            ChangeBG("ffffff")
+            myColor.reset()
+            FetchAll()
+        });
+        FetchAll();
+    </script>
+</body>
+</html>

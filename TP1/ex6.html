@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @media only screen and (max-width: 550px) {
+            .wrapper{
+                padding: 30px 5px;
+            }
+            .big{
+                display: none;
+            }
+            .small{
+                padding: 5%;
+                color: white;
+                background-color: coral;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+            }
+        }
+        @media only screen and (min-width: 550px) {
+            .wrapper{
+                padding: 30px 60px;
+            }
+            .small{
+                display: none;
+            }
+            .big{
+                padding: 5%;
+                color: white;
+                font-size: 25px;
+                background-color: greenyellow;
+                width: 35%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+            }
+        }
+
+        .wrapper{
+            background-color: lightgray;
+            position:absolute;
+            top:0px;
+            right:0px;
+            bottom:0px;
+            left:0px;
+        }
+        .content{
+            height: 100%;
+            background-color: white;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <span class="small">I'm SMALL 😥</span>
+            <span class="big">I'm BIG 😱</span>
+        </div>
+    </div>
+</body>
+</html>
