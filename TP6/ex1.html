@@ -80,19 +80,11 @@
         let dataToInner = "";
         const onLoadData = (page) => {
             dataLoading = true;
-            // if(page>)
             console.log("Page " + page);
             fetch(`https://api.instantwebtools.net/v1/passenger?page=${page}&size=20`)
                 .then(async (res) => {
-                    // loadingTextEle.hidden = true;
                     let dataInfo = await res.json();
                     let data = dataInfo.data
-                    dataToInner += `
-                        <div class="wrapper bg-white w-full p-[2.5vh]">
-                            <div>🛩: <span class="font-bold">${page}</span></div>
-                            
-                        </div>
-                        `
                     data.forEach(element => {
                         dataToInner += `
                         <div class="wrapper bg-white w-full p-[2.5vh]">
@@ -118,11 +110,6 @@
                 });
 
         }
-
-
-
-
-
         onLoadData(currPageNum);
     </script>
 </body>
