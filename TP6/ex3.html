@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* loading animation */
+        .lds-ring {
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+        }
+
+        .lds-ring div {
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border: 8px solid black;
+            border-radius: 50%;
+            animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            border-color: black transparent transparent transparent;
+        }
+
+        .lds-ring div:nth-child(1) {
+            animation-delay: -0.45s;
+        }
+
+        .lds-ring div:nth-child(2) {
+            animation-delay: -0.3s;
+        }
+
+        .lds-ring div:nth-child(3) {
+            animation-delay: -0.15s;
+        }
+
+        @keyframes lds-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =================================== */
+    </style>
+
+
+</head>
+
+<body class="p-5">
+    <!-- https://api.instantwebtools.net/v1/passenger?page=1&size=10 -->
+    <div class="m-auto border w-[95vw] h-[95vh] flex flex-col gap-3 bg-gray-300 p-3 overflow-y-scroll" id="scroller">
+        <div class="lds-ring" id="loading">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <script>
+
+        if (!localStorage.getItem('tmpPunnreayPage')) { localStorage.setItem('tmpPunnreayPage', 0); }
+        console.log(localStorage.getItem('tmpPunnreayPage'))
+        let scrollerEle = document.getElementById("scroller");
+
+
+        let currPageNum = 0;
+        let dataLoading = false;
+
+        let dataToInner = "";
+        const onLoadData = (page) => {
+            dataLoading = true;
+            if (localStorage.getItem('tmpPunnreayPage') > currPageNum) {
+                const getData = localStorage.getItem(`punnreayPage${currPageNum}`);
+                    let myLocalData = JSON.parse(getData);
+                    myLocalData.forEach(element => {
+                            dataToInner += `
+                        <div class="wrapper bg-white w-full p-[2.5vh]">
+                            <div>🛩: <span class="font-bold">${element.airline[0].name} - ${element.airline[0].country}</span></div>
+                            <div>🙂: ${element["name"]}</div>
+                        </div>
+                        `
+                    });
+
+                currPageNum++;
+                scrollerEle.innerHTML = dataToInner;
+                dataLoading = false;
+            } else {
+                fetch(`https://api.instantwebtools.net/v1/passenger?page=${page}&size=20`)
+                    .then(async (res) => {
+                        let dataInfo = await res.json();
+                        let data = dataInfo.data
+                        localStorage.setItem(`punnreayPage${page}`, JSON.stringify(data));
+                        data.forEach(element => {
+                            
+                            dataToInner += `
+                        <div class="wrapper bg-white w-full p-[2.5vh]">
+                            <div>🛩: <span class="font-bold">${element.airline[0].name} - ${element.airline[0].country}</span></div>
+                            <div>🙂: ${element["name"]}</div>
+                        </div>
+                        `
+                        });
+                        scrollerEle.innerHTML = dataToInner;
+                        currPageNum++;
+                        localStorage.setItem(`tmpPunnreayPage`, currPageNum);
+                        dataLoading = false;
+                    });
+            }
+
+
+            scrollerEle.addEventListener("scroll", (event) => {
+                const { scrollTop, clientHeight, scrollHeight } = scrollerEle;
+                if ((clientHeight + scrollTop) >= scrollHeight * 0.95) {
+                    if (!dataLoading) {
+                        onLoadData(currPageNum);
+                    }
+                }
+            });
+
+        }
+
+
+
+
+
+        onLoadData(currPageNum);
+    </script>
+</body>
+
+</html>
