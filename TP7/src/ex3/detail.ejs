@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Book Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div id="items">
+
+    </div>
+
+    <script>
+
+        let id = '<%= id %>';
+        let output = '';
+
+        fetch(`https://jsonplaceholder.typicode.com/photos/${id}`).then(async (res) => {
+            let result = await res.json();
+            output += `
+                <div class="wrapper-1 text-white bg-gray-500 p-[5vh] text-center space-y-3">
+                    <div class="font-bold text-xl">${result.title}</div>
+                    <div>${result.albumId}</div>
+                    <div>Resize the browser window to see this page is responsive by the way.</div>
+                </div>
+                <div class="wrapper-2 flex flex-col justify-center items-center">
+                    <div class="font-bold m-[3%]">${result.id}</div>
+                    <img class="w-1/4" src="${result.url}" alt="bookIMG">
+                </div>
+            `;
+
+            document.getElementById('items').innerHTML = output;
+        });
+    </script>
+</body>
+
+</html>
