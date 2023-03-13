@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div class="wrapper flex flex-col w-full h-screen justify-center items-center">
+        <img src="https://cdn0.iconfinder.com/data/icons/pokemon-go-vol-2/135/_Time-512.png" alt="clock.png" class="w-[12rem]">
+        <div class="font-serif font-bold text-3xl mt-5">Khmer Past Time</div>
+        <input type="datetime-local" id="valDate" class="border bg-gray-200 rounded-lg pl-3 pr-3 p-1 mt-5 mb-10">
+        <div id="status" class="text-4xl font-bold text-orange-600"></div>
+    </div>
+    <script type="module">
+        import { KhmerDate } from "./lib/dateChecker.js";
+
+        var date_input = document.getElementById('valDate');
+
+        date_input.onchange = function () {
+
+            const in_date = new Date(this.value);
+            const inputDate = new KhmerDate(new Date(in_date.getTime()));
+
+            console.log(inputDate.getRelativeTime());
+            console.log(inputDate.getDate());
+            console.log(Date.now());
+
+            document.getElementById('status').innerHTML = inputDate.getRelativeTime();
+            console.log(this.value);
+        }
+
+
+
+    </script>
+</body>
+
+</html>

@@ -5,15 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ex1": "node severEx1.js",
-    "ex2": "node severEx2.js",
-    "ex3": "node severEx3.js",
-    "dev-watch": "nodemon npm run dev"
+    "ex1": "node serverEx1.js",
+    "ex2": "node serverEx2.js",
+    "ex3": "node serverEx3.js",
+    "ex4": "node serverEx4.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.9",
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
   }
 }
