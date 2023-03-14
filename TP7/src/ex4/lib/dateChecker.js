@@ -9,10 +9,7 @@ class KhmerDate {
     getRelativeTime() {
         const now = new Date();
         const msAgo = now.getTime() - this.date.getTime();
-        if (msAgo < 6000) {
-            return "just now";
-        }
-        else if (msAgo < 60 * 1000) {
+        if (msAgo < 60 * 1000) {
             return `មុននេះបន្តិច`;
         }
         else if (msAgo < 60 * 60 * 1000) {
