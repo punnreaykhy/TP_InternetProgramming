@@ -15,4 +15,4 @@ app.use(router)
 
 app.mount('#app')
 
-import 'bootstrap'
+import 'bootstrap/dist/js/bootstrap.js'

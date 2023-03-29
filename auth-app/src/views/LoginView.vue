@@ -28,15 +28,15 @@
         style="border-radius: 100%"
       />
 
-      <form class="w-100">
+      <form class="w-100" @submit.prevent="login">
         <div class="form-group">
           <label for="exampleInputEmail1">Username</label>
           <input
-            type="email"
+            type="text"
             class="form-control"
-            id="exampleInputEmail1"
             aria-describedby="emailHelp"
             placeholder="Enter email"
+            v-model="username" required
           />
         </div>
         <div class="form-group">
@@ -44,12 +44,13 @@
           <input
             type="password"
             class="form-control mb-3"
-            id="exampleInputPassword1"
             placeholder="Enter Password"
+            v-model="password" required
           />
         </div>
-        <RouterLink to="/home" class="w-100 btn btn-success">Login</RouterLink>
+        <button type="submit" class="w-100 btn btn-success">Login</button>
       </form>
+      <p v-if="error" class="text-danger">{{ error }}</p>
     </div>
 
     <div style="align-self: flex-end">Forgot <a href="#">password?</a></div>
@@ -59,9 +60,34 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 import AuthMsg from "../components/AuthMsg.vue";
+</script>
 
+<script>
+import axios from 'axios';
 
-
+export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      error: '',
+    };
+  },
+  methods: {
+    async login() {
+      try {
+        const response = await axios.post('http://localhost:3000/login', {
+          username: this.username,
+          password: this.password,
+        });
+        localStorage.setItem('token', response.data.token);
+        this.$router.push('/home');
+      } catch (error) {
+        this.error = error.response.data.error;
+      }
+    },
+  },
+};
 </script>
 
 
@@ -73,4 +99,5 @@ import AuthMsg from "../components/AuthMsg.vue";
   justify-content: center;
   align-items: center;
 }
+
 </style>

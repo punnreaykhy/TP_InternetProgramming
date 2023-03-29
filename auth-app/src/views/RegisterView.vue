@@ -25,41 +25,42 @@
       <hr />
     </div>
 
-    <form class="w-100">
+    <form class="w-100" @submit.prevent="register">
       <div class="form-group">
         <label for="exampleInputEmail1">Email</label>
         <input
           type="email"
           class="form-control"
-          id="exampleInputEmail1"
+          id="email"
           placeholder="Enter Email"
+          v-model="email" required
         />
       </div>
       <div class="form-group">
         <label for="exampleInputEmail1">Username</label>
         <input
-          type="email"
+          type="text"
           class="form-control"
-          id="exampleInputEmail1"
-          placeholder="Username"
+          id="username" v-model="username"
+          placeholder="Username" required
         />
       </div>
       <div class="form-group">
         <label for="exampleInputEmail1">First name</label>
         <input
-          type="email"
+          type="text"
           class="form-control"
-          id="exampleInputEmail1"
-          placeholder="First Name"
+          id="first-name" v-model="firstName"
+          placeholder="First Name" required
         />
       </div>
       <div class="form-group">
         <label for="exampleInputEmail1">Last name</label>
         <input
-          type="email"
+          type="text"
           class="form-control"
-          id="exampleInputEmail1"
-          placeholder="Last Name"
+          id="last-name" v-model="lastName"
+          placeholder="Last Name" required
         />
       </div>
       <div class="form-group">
@@ -67,8 +68,8 @@
         <input
           type="password"
           class="form-control"
-          id="exampleInputPassword1"
-          placeholder="Create your Password"
+          id="password" v-model="password"
+          placeholder="Create your Password" required
         />
       </div>
       <div>
@@ -76,16 +77,51 @@
           By creating an account you agree to our
           <a href="#" class="text-primary">Terms & Privacy</a>.
         </div>
-        <RouterLink to="/home" class="btn btn-success w-50" style="border-radius: 0%;">Sign Up</RouterLink>
+        <button type="submit" class="btn btn-success w-50" style="border-radius: 0%;">Sign Up</button>
       </div>
     </form>
+    <p v-if="error" class="text-danger">{{ error }}</p>
   </div>
   
 </template>
 
+
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 import AuthMsg from "../components/AuthMsg.vue";
+</script>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      lastName: '',
+      firstName: '',
+      email: '',
+      error: '',
+    };
+  },
+  methods: {
+    async register() {
+      try {
+        await axios.post('http://localhost:3000/register', {
+          username: this.username,
+          password: this.password,
+          lastName: this.lastName,
+          firstName: this.firstName,
+          email: this.email,
+        });
+        this.$router.push('/');
+      } catch (error) {
+        this.error = error.response.data.error;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
