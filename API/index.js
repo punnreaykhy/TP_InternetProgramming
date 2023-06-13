@@ -5,7 +5,7 @@ const app = express();
 var session = require('express-session')
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'http://127.0.0.1:5173',
   credentials: true
 }))
 
@@ -30,7 +30,7 @@ app.use(session({
 // Connect mongodb
 require('./configs/db')();
 
-app.use(require('./routes'))
+app.use(require('./routes/index'))
 
 app.listen(process.env.PORT || 3001, () => console.log('App avaiable on http://localhost:3001'))
 
