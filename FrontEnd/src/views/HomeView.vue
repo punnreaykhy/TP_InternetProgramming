@@ -1,125 +1,132 @@
-<template>
-  <div v-if="isLogin === true" class="myHome" style="width:88vw; margin:auto;">
-    <div class="nav1 d-flex justify-content-between align-items-center w-100">
-      <div class="myLogo">
-        <a class="text-black gap-4 pe-4 d-flex fs-1 fw-semibold align-items-center" href="#"><img src="https://gic.itc.edu.kh/img/logo.png" alt="myLogo" style="width:82px; height:64px">GIC</a>
-      </div>
-      <div class="menu h-100 d-flex align-items-center">
-        <ul style="list-style-type:none" class="d-flex gap-3 mt-3">
-          <li><a href="#">ABOUT US</a></li>
-          <li><a href="#">ACADEMICS</a></li>
-          <li><a href="#">WHY GIC</a></li>
-          <li><a href="#">LIFESTYLE</a></li>
-          <li><a href="#">CONTACT</a></li>
-        </ul>
-      </div>
-      <div class="search-logout d-flex gap-4 align-items-center">
-        <i class="bi bi-search btn"></i>
-        <div class="bg-black" style="width: 2px; height:1.5rem;"></div>
-        <button class="btn" @click="logout">Logout</button>
-      </div>
-    </div>
-
-    <div class="container d-flex h-75">
-      <div class="content1 d-flex flex-column justify-content-center" style="width:45%; height: 90;">
-        <h1 class="fw-bold">Deep Learning Through Deep Connections.</h1>
-        <p class="fst-italic fs-5 my-2">Taking a deep dive.</p>
-        <p>The hero's journey starts here. Become a learing legend.</p>
-        <button class="btn w-50 py-2 my-4">GET STARTED</button>
-        <p class="my-3">Elevate your experience. Empower the next generation.</p>
-        <a href="#" style="width:fit-content">JOIN OUR TEAM</a>
-      </div>
-
-      <div style="width: 90%;">
-        <img src="../assets/Home-Page-Header.png" alt="" class="w-100">
-      </div>
-    </div>
-
-
-
-    <!-- <h1>Home</h1>
-    <p>Welcome, {{ username }}!</p>
-    <button @click="logout">Logout</button> -->
-  </div>
-</template>
-
 <script>
+import productApi from "../libs/apis/product";
+import categoryApi from "../libs/apis/category";
+import category from "../libs/apis/category";
+import product from "../libs/apis/product";
 
 export default {
+  components: {},
   data() {
     return {
-      isLogin: false
+      products: [],
+      categories: [],
     };
   },
-  computed: {
-    username() {
-      if(this.isLogin){
-        const token = localStorage.getItem('token');
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return payload.username;
-      }
-    },
+  async mounted() {
+    // product
+    this.products = await productApi.all();
+    
+    // category
+    this.categories = await categoryApi.categorizedItem();
+    
+
   },
   methods: {
-    logout() {
-      this.isLogin = false;
-      localStorage.removeItem('token');
-      this.$router.push('/');
+    async onClick(paramCat, paramItem) {
+      console.log(paramCat);
+      if (paramItem == null) {
+        this.products = await productApi.productByCatAndItem(paramCat, "");
+      } else {
+        this.products = await productApi.productByCatAndItem(
+          paramCat,
+          paramItem
+        );
+      }
     },
-  },
-  created() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      this.$router.push('/');
-    }else{
-      this.isLogin = true;
-    }
   },
 };
 </script>
 
-<style scoped>
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-button:hover{
-  background-color: rgba(169, 248, 255, 0.912) !important;
-}
+<template>
+  <main>
+    <div class="bg-gray-100 py-2 text-center text-lg relative">
+      TopOne.com
 
-.myHome{
-  width: 100%;
+      <div
+        class="absolute text-white right-2 top-2 bg-gray-400 px-2 rounded-md cursor-pointer"
+      >
+        <router-link to="/dashboard"><div class="">Dashboard</div></router-link>
+      </div>
+    </div>
+    <!-- blocks -->
+    <div class="container">
+      <div class="left-container">
+        <div
+          class="p-10 border border-gray-400"
+          v-for="category in categories"
+          :key="category?._id"
+        >
+          <a href="#" @click="onClick(category._id, null)">
+            <b>{{ category.name }}</b>
+          </a>
+          <table v-for="item in category?.items" :key="item?._id">
+            <tbody>
+              <tr>
+                <td>
+                  <a href="#" @click="onClick(category._id, item?._id)">. {{ item?.name }}</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="right-container bg-blue-100">
+        <div
+          class="card bg-gray-100"
+          style="width: 18rem"
+          v-for="product in products"
+          :key="product?._id"
+        >
 
+          <b class="m-10">{{ product?.title }}</b>
+          <div class="card-body">
+            <table v-for="price in product?.prices" :key="price?._id">
+              <tbody>
+                <tr>
+                  <div class="price">
+                    <div>{{ price?.price }}</div>- 
+                    <div>{{ price?.source }} $</div>
+                  </div>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- <h1>You're in Home Page</h1> -->
+  </main>
+</template>
+
+<style>
+
+.title {
+  text-align: center;
 }
-.nav1{
-height: 5rem;
+.container {
+  display: flex;
 }
-.nav1 a{
-text-decoration: none;
-color: black;
-font-weight: bold;
+.left-container {
+  width: 30%;
 }
-
-.search-logout button{
-font-weight: bold;
-font-size: 1.2rem;
-color: #EA708B;
+.right-container {
+  width: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-
-.content1 a{
-font-weight: bold;
-color: black;
-text-decoration-line: underline;
-text-decoration-style: solid;
-text-underline-offset: 5px;
+.price {
+  display: flex;
 }
-
-.content1 button{
-
-color: white;
-background-color:#EA708B;
+.price .right {
+  width: 100px;
 }
-
-
+.price .left {
+  width: 20px;
+}
+.card {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
 </style>

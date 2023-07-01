@@ -1,19 +1,12 @@
 <template>
   <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
 
     <div class="wrapper">
       <AuthMsg msg="Welcome" />
 
       <nav>
-        <RouterLink to="/">Login</RouterLink>
-        <RouterLink to="/register">Register</RouterLink>
+        <RouterLink to="/login"><h3>Login</h3></RouterLink>
+        <RouterLink to="/signup"><h3>Register</h3></RouterLink>
       </nav>
     </div>
   </header>
@@ -25,7 +18,7 @@
       <hr />
     </div>
 
-    <form class="w-100" @submit.prevent="register">
+    <form class="w-100" @submit="onSubmit">
       <div class="form-group">
         <label for="exampleInputEmail1">Email</label>
         <input
@@ -68,8 +61,17 @@
         <input
           type="password"
           class="form-control"
-          id="password" v-model="password"
+          id="password" v-model="pwd"
           placeholder="Create your Password" required
+        />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Confirm Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password" v-model="repeatPws"
+          placeholder="Re-Input your Password" required
         />
       </div>
       <div>
@@ -80,7 +82,6 @@
         <button type="submit" class="btn btn-success w-50" style="border-radius: 0%;">Sign Up</button>
       </div>
     </form>
-    <p v-if="error" class="text-danger">{{ error }}</p>
   </div>
   
 </template>
@@ -88,43 +89,53 @@
 
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import AuthMsg from "../components/AuthMsg.vue";
 </script>
 
 <script>
-import axios from 'axios';
-
 export default {
   data() {
     return {
-      username: '',
-      password: '',
-      lastName: '',
-      firstName: '',
-      email: '',
-      error: '',
+      email: "",
+      username: "",
+      firstName: "",
+      lastName: "",
+      pwd: "",
+      repeatPws: "",
     };
   },
   methods: {
-    async register() {
-      try {
-        await axios.post('http://localhost:3001/register', {
-          username: this.username,
-          password: this.password,
-          lastName: this.lastName,
-          firstName: this.firstName,
+    async onSubmit(e) {
+      e.preventDefault();
+      const res = await fetch("http://localhost:3001/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
           email: this.email,
-        });
-        this.$router.push('/');
-      } catch (error) {
-        this.error = error.response.data.error;
+          username: this.username,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          password: this.pwd,
+          repeat_password: this.repeatPws,
+        }),
+      });
+
+      const result = await res.json();
+      if (!result.success) {
+        alert(result.error);
+        return;
       }
+
+      alert("Successfully registered~");
+      this.$router.push({ name: "auth/login" });
     },
   },
 };
 </script>
 
 <style scoped>
+@import 'bootstrap/dist/css/bootstrap.css';
 .about {
   display: flex;
   flex-direction: column;

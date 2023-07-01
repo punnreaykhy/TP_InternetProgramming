@@ -5,6 +5,12 @@ const userService = require('../services/user');
 const { logout } = require('../services/logout');
 
 
+router.get('/all', auth.ensureSignedIn, async (req, res) => {
+  const result = await userService.findAll()
+  res.json(result)
+})
+
+
 router.get('/:id', auth.ensureSignedIn, auth.currentUser, async function (req, res, next) {
   const { id } = req.params;
   console.log(req?.currentUser);
@@ -13,9 +19,8 @@ router.get('/:id', auth.ensureSignedIn, auth.currentUser, async function (req, r
 })
 
 router.post('/update-password', auth.ensureSignedIn, auth.currentUser, async function(req, res, next){
-  const email = req.currentUser.email
-  const param = req.body;
-  const {newPassword} = param
+  const id = req.currentUser._id
+  const {newPassword} = req.body
   const result = await userService.updatePass(newPassword, email)
   if(result.success){
     logout(req.session);
@@ -24,19 +29,25 @@ router.post('/update-password', auth.ensureSignedIn, auth.currentUser, async fun
   return res.json(result)
 })
 router.post('/update-user', auth.ensureSignedIn, auth.currentUser, async function(req, res){
-  const email = req.currentUser.email
-  const param = req.body;
-  const {newEmail} = param
-  const result = await userService.updateUser(newEmail, email)
-  if(result.success){
-    logout(req.session);
-    res.clearCookie('access_token')
-  }
-  return res.json(result)
+  const id = req.currentUser._id
+  const { username, firstName, lastName, email } = req.body
+  try{
+    const doc = await Users.findById(id);
+      //update data
+      doc.username = username;
+      doc.firstName = firstName;
+      doc.lastName = lastName;
+      doc.email = email;
+      await doc.save();
+      res.json({ success: true, data: doc });
+    } catch (error) {
+      res.json({ success: false, error: error });
+    }
 })
+
 router.post('/delete-user', auth.ensureSignedIn, auth.currentUser, async function(req,res){
-  const email = req.currentUser.email
-  const result = await userService.deleteUser(email);
+  const id = req.currentUser._id
+  const result = await userService.deleteUser(id);
   if(result.success){
       logout(req.session);
       res.clearCookie('token')

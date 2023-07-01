@@ -1,107 +1,170 @@
-<!-- LoginView.vue -->
-<template>
-  <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
-
-    <div class="wrapper">
-      <AuthMsg msg="Welcome" />
-
-      <nav>
-        <RouterLink to="/">Login</RouterLink>
-        <RouterLink to="/register">Register</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <div class="login">
-    <div class="login p-3 border w-100">
-      <img
-        class="mb-5"
-        src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTx_Mvfzz5u4lucj379K7SCTEKuvVNjqcSy0UR-v4mwtRSY3zFf"
-        alt="userIMG"
-        style="border-radius: 100%"
-      />
-
-      <form class="w-100" @submit.prevent="login">
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email</label>
-          <input
-            type="text"
-            class="form-control"
-            aria-describedby="emailHelp"
-            placeholder="Enter Email"
-            v-model="email" required
-          />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input
-            type="password"
-            class="form-control mb-3"
-            placeholder="Enter Password"
-            v-model="password" required
-          />
-        </div>
-        <button type="submit" class="w-100 btn btn-success">Login</button>
-      </form>
-      <p v-if="error" class="text-danger">{{ error }}</p>
-    </div>
-
-    <div style="align-self: flex-end">Forgot <a href="#">password?</a></div>
-  </div>
-</template>
-
-<script setup>
-import { RouterLink, RouterView } from "vue-router";
-import AuthMsg from "../components/AuthMsg.vue";
-</script>
-
-<script>
-import axios from 'axios';
-
+<script >
+import TheWelcome from "@/components/TheWelcome.vue";
 export default {
+  components: {
+    TheWelcome,
+  },
+  setup() {
+  },
   data() {
     return {
-      email: '',
-      password: '',
-      error: '',
+      email: "",
+      password: "",
     };
   },
+  async mounted() {
+    console.log("hello world");
+  },
   methods: {
-    async login() {
-      try {
-        const response = await axios.post('http://localhost:3001/login', {
+    async onSubmit(e) {
+      e.preventDefault();
+      const res = await fetch("http://localhost:3001/auth/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
           email: this.email,
           password: this.password,
-        });
-        if(response.data.success){
-          localStorage.setItem('token', response.data.token);
-          this.$router.push('/home');
-        }else{
-          this.error = "Incorrect email or password!"
-        }
-      } catch (error) {
-        this.error = error.response.error;
+        }),
+      });
+
+      const result = await res.json();
+      if (!result.success) {
+        alert(result.error);
+        return;
       }
+
+      this.$router.push({ name: "dashboard" });
     },
   },
 };
 </script>
 
+<template>
+  <main>
+    <div style="width: 100%; display: flex; justify-content: center">
+      <div style="max-width: 500px">
+        <form @submit="onSubmit" method="post">
+          <div class="imgcontainer">
+            <img
+              src="https://www.w3schools.com/howto/img_avatar2.png"
+              alt="Avatar"
+              class="avatar"
+            />
+          </div>
 
-<style>
-@import "../assets/app.css";
-.login {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+          <div class="container">
+            <label for="email"><b>Username</b></label>
+            <input
+              v-model="email"
+              type="text"
+              placeholder="Enter email"
+              name="email"
+              required
+            />
+
+            <label for="psw"><b>Password</b></label>
+            <input
+              v-model="password"
+              type="password"
+              placeholder="Enter Password"
+              name="psw"
+              required
+            />
+
+            <button type="submit">Login</button>
+          </div>
+
+          <div
+            class="container"
+            style="
+              background-color: #f1f1f1;
+              display: flex;
+              justify-content: end;
+            "
+          >
+            <!-- <span class="psw">Forgot </span> -->
+            <RouterLink to="/signup">Create your new account here.</RouterLink>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</template>
+
+<style scoped>
+/* Bordered form */
+form {
+  border: 3px solid #f1f1f1;
 }
 
+/* Full-width inputs */
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Set a style for all buttons */
+button {
+  background-color: #04aa6d;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Add a hover effect for buttons */
+button:hover {
+  opacity: 0.8;
+}
+
+/* Extra style for the cancel button (red) */
+.cancelbtn {
+  width: auto;
+  padding: 10px 18px;
+  background-color: #f44336;
+}
+
+/* Center the avatar image inside this container */
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+}
+
+/* Avatar image */
+img.avatar {
+  width: 40%;
+  border-radius: 50%;
+}
+
+/* Add padding to containers */
+.container {
+  padding: 16px;
+}
+
+/* The "Forgot password" text */
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+    display: block;
+    float: none;
+  }
+  .cancelbtn {
+    width: 100%;
+  }
+}
 </style>

@@ -38,24 +38,24 @@ const updatePass = async (newPassword, email) => {
   }
 }
 
-const updateUser = async (newInfo, email) => {
+const updateUser = async (newInfo, _id) => {
   try{
       await Users.findOneAndUpdate({email}, {"email":newInfo})
       const user = await Users.findOne({email})
       return {
-          success: true
+          success: true,
+          data: user
       }
   }catch(err){
       throw('update err', err)
   }
 }
-const deleteUser = async (email) => {
+const deleteUser = async (_id) => {
   try{
-      const user = await Users.findOneAndDelete({email})
+      const user = await Users.findOneAndDelete({_id})
       
       return {
-          success: true,
-          data: user
+          success: true
       }
   }catch(err){
       throw('delete err', err)

@@ -2,11 +2,7 @@ const Items = require("../models/items")
 
 const findById = async (id) => {
   try {
-    const item = await Items.findById(id)
-    return {
-      success: true,
-      data: item
-    };
+    return await Items.findById(id)
   } catch (err) {
     return {
       success: false,
@@ -17,11 +13,7 @@ const findById = async (id) => {
 
 const findAll = async ()=>{
   try {
-    const items = await Items.find()
-    return {
-      success: true,
-      data: items
-    };
+    return await Items.find().populate('category')
   } catch (err) {
     return {
       success: false,

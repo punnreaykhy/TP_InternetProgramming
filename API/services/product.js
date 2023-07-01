@@ -83,7 +83,6 @@ const update = async (id, newProduct) => {
     product.price = newProduct.price
     product.category = newProduct.category
     product.item = newProduct.item
-    product.user = newProduct.user
     await product.save()
     return {
       success: true,

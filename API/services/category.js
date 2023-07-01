@@ -2,12 +2,7 @@ const Categories = require("../models/categories")
 
 const findById = async (id) => {
   try{
-    const category = await Categories.findById(id)
-    console.log(category);
-    return {
-      success : true,
-      data : category
-    }
+    return await Categories.findById(id)
   }catch(err){
     return {
       success : false,
@@ -17,18 +12,7 @@ const findById = async (id) => {
 }
 
 const findAll = async () => {
-  try{
-    const categories = await Categories.find()
-    return {
-      success : true,
-      data : categories
-    }
-  }catch(err){
-    return {
-      success : false,
-      err : err.message
-    }
-  }
+  return await Categories.find();
 }
 
 const findCategorizedItems = async () => {
