@@ -83,9 +83,9 @@ export default {
             <table v-for="price in product?.prices" :key="price?._id">
               <tbody>
                 <tr>
-                  <div class="price">
-                    <div>{{ price?.price }}</div>- 
-                    <div>{{ price?.source }} $</div>
+                  <div class="price flex gap-4">
+                    <div>{{ price?.price }}$</div>
+                    <div>{{ price?.source }}</div>
                   </div>
                 </tr>
               </tbody>

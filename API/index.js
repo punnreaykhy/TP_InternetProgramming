@@ -22,6 +22,7 @@ require('./configs/session')(app);
 require('./configs/db')();
 
 app.use(require('./routes/index'))
+app.use('/uploads', express.static('uploads'))
 
 app.listen(process.env.PORT || 3001, () => console.log('App avaiable on http://localhost:3001'))
 

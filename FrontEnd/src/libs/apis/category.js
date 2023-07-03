@@ -28,6 +28,33 @@ var category = {
 
     return result;
   },
+  async edit(item) {
+    const res = await fetch(`http://localhost:3001/category/update/${item.id}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ name: item.name, desc: item.desc, imageUrl: item.imageUrl }),
+    });
+
+    const result = await res.json();
+    return result;
+  },
+
+  async remove(id) {
+    const res = await fetch(`http://localhost:3001/category/delete/${id}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    const result = await res.json();
+    return result;
+  },
+
   async findById(id) {
     const res = await fetch(`http://localhost:3001/category/${id}`, {
       method: "GET",

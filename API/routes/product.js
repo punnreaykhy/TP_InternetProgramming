@@ -3,6 +3,7 @@ const auth = require('../middlewares/auth');
 const { } = require('../schemas');
 var router = express.Router();
 const productService = require('../services/product');
+const {upload} = require('../middlewares/multer');
 
 router.get('/all/:category?/:item?', async (req, res) => {
   const { category, item } = req.params;
@@ -16,8 +17,11 @@ router.get('/:id', auth.ensureSignedIn, async function (req, res, next) {
   res.json(result);
 })
 
-router.post('/create', auth.ensureSignedIn, async (req, res, next) => {
+router.post('/create', auth.ensureSignedIn, upload.single('image'), async (req, res, next) => {
   const newProduct = req.body
+  // console.log(req.file.path);
+  // const imageUrl = req.file.path;
+  // newProduct.imageUrl = imageUrl;
   const result = await productService.create(newProduct)
   res.json(result);
 })

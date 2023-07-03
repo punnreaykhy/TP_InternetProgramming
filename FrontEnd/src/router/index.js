@@ -5,7 +5,7 @@ import Dashboard from '../views/Dashboard/Dashboard.vue';
 import Category from '../views/Dashboard/pages/category.vue';
 import Item from '../views/Dashboard/pages/item.vue';
 import Product from '../views/Dashboard/pages/product.vue';
-import ProductEdit from '../views/Dashboard/pages/productEdit.vue';
+import ProductEdit from '../views/Dashboard/pages/editPage/productEdit.vue';
 import authApi from '@/libs/apis/auth';
 
 const router = createRouter({
