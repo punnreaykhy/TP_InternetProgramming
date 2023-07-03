@@ -16,7 +16,7 @@ module.exports = async (app) => {
     saveUninitialized: true,
     name: 'access_token',
     cookie: {
-      maxAge: 1000 * 60 * 60 * 2, // 2 hours
+      maxAge: 1000 * 60 * 60 * 48, // 48 hours
       secure: false,
     }
   })

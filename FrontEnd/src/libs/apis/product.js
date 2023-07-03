@@ -6,7 +6,20 @@ var product = {
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ title, category, item, imageUrl, desc  }),
+      body: JSON.stringify({ title, category, item, imageUrl, desc }),
+    });
+
+    const result = await res.json();
+    return result;
+  },
+  async update(id, newProduct) {
+    const res = await fetch(`http://localhost:3001/product/update/${id}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ title: newProduct.title, category: newProduct.category, item: newProduct.item, imageUrl: newProduct.imageUrl, desc: newProduct.desc }),
     });
 
     const result = await res.json();
@@ -39,6 +52,23 @@ var product = {
 
     return result;
   },
+
+  async findById(id) {
+    const res = await fetch(`http://localhost:3001/product/${id}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+        Origin: "http://localhost:3000",
+      },
+    });
+
+    const result = await res.json();
+    if (!result) return "Check Your Req again";
+
+    return result;
+  },
+
   async productByCatAndItem(category, item) {
     const res = await fetch(`http://localhost:3001/product/all/${category}/${item}`, {
 

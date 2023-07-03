@@ -5,7 +5,8 @@ import Dashboard from '../views/Dashboard/Dashboard.vue';
 import Category from '../views/Dashboard/pages/category.vue';
 import Item from '../views/Dashboard/pages/item.vue';
 import Product from '../views/Dashboard/pages/product.vue';
-import authApi from '@/libs/apis/auth'
+import ProductEdit from '../views/Dashboard/pages/productEdit.vue';
+import authApi from '@/libs/apis/auth';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,8 +46,14 @@ const router = createRouter({
           name: 'dashboard/product',
           component: Product,
         },
+        {
+          path: 'product/:id',  // Route with a parameter named 'id'
+          name: 'dashboard/product/id',
+          component: ProductEdit,
+        },
       ],
     },
+    
   ]
 })
 

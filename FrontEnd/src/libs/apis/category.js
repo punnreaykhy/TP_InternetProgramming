@@ -28,6 +28,21 @@ var category = {
 
     return result;
   },
+  async findById(id) {
+    const res = await fetch(`http://localhost:3001/category/${id}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+        Origin: allowedOrigins,
+      },
+    });
+
+    const result = await res.json();
+    if (!result) return "Check Your Req again";
+
+    return result;
+  },
   async categorizedItem() {
     const res = await fetch("http://localhost:3001/category/categorized-items", {
       method: "GET",

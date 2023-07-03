@@ -47,7 +47,6 @@ export default {
           "";
     },
     onSelectProduct(product) {
-      this.priceModalShown = true;
       this.selectedProduct = product;
     },
     async onAddPrice(e) {
@@ -67,21 +66,26 @@ export default {
 
       this.products = await productApi.all();
       this.price = this.source = this.selectedProduct = "";
+      this.priceModalShown = false;
     },
-    async onDelete(e) {
-      e.preventDefault();
-      const {selectedProduct} = this;
-      const result = await productApi.remove(selectedProduct._id);
-      
-      console.log(result);
-      if (result.error) {
-        alert(result.error);
-        return;
+    async onDelete() {
+      const state = confirm("Are you sure to Delete?");
+      if(state){
+        const {selectedProduct} = this;
+        let result = await priceApi.removeByPid(selectedProduct._id);
+        result = await productApi.remove(selectedProduct._id);
+        if (result.error) {
+          alert(result.error);
+          return;
+        }
+        this.products = await productApi.all();
+        this.selectedProduct = "";
       }
-
-      this.products = await productApi.all();
-      this.price = this.source = this.selectedProduct = "";
     },
+    onEdit(){
+      const {selectedProduct} = this;
+      this.$router.push({ name: 'dashboard/product/id', params: { id: selectedProduct._id } });
+    }
   },
   async mounted() {
     this.categories = await categoryApi.all();
@@ -188,11 +192,19 @@ export default {
           <td>{{ product.desc }}</td>
           <td>
             <div class="flex flex-col space-y-2">
-              <button class="hover:text-green-600 hover:font-bold">Edit</button>
-              <button class="hover:text-green-600 hover:font-bold">
+              
+              <button 
+              v-on:click="onSelectProduct(product), onEdit()"
+              class="hover:text-green-600 hover:font-bold"
+              >Edit</button>
+              <button 
+                v-on:click="onSelectProduct(product), onDelete()"
+                class="hover:text-green-600 hover:font-bold"
+              >
                 Delete
               </button>
               <button
+                v-on:click="onSelectProduct(product), priceModalShown = true"
                 class="hover:text-green-600 hover:font-bold"
               >
                 Add price
@@ -204,8 +216,10 @@ export default {
     </div>
 
     <div
+      id="overlay"
       v-if="priceModalShown && selectedProduct"
       class="
+        popupForm
         flex
         justify-center
         items-center
@@ -216,7 +230,67 @@ export default {
         right-0
       "
     >
-      
+      <div class="w-72 h-96 bg-white rounded-lg shadow-md">
+        <form @submit="onAddPrice" method="post">
+          <div class="h-full w-full flex flex-col">
+            <div class="flex flex-grow-0 relative p-2 py-3">
+              <div class="font-bold text-center w-full">
+                {{ selectedProduct?.title }}
+              </div>
+            </div>
+            <div class="w-full flex flex-grow p-2">
+              <div class="w-full flex flex-col space-y-3">
+                <div class="border">
+                  <input
+                    required
+                    v-model="price"
+                    class="w-full h-10 px-1"
+                    type="number"
+                    placeholder="Price"
+                  />
+                </div>
+                <div class="border">
+                  <input
+                    required
+                    v-model="source"
+                    class="w-full h-10 px-1"
+                    type="text"
+                    placeholder="Source"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-grow-0 py-1 justify-center space-x-2">
+              <button
+                v-on:click="priceModalShown = false"
+                class="
+                  p-2
+                  px-3
+                  text-gray-500
+                  rounded-md
+                  cursor-pointer
+                  border border-gray-100
+                "
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="
+                  bg-blue-500
+                  p-2
+                  px-3
+                  text-white
+                  rounded-md
+                  cursor-pointer
+                "
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </main>
 </template>
@@ -240,5 +314,15 @@ export default {
 
 #customers tr:hover {
   background-color: #ddd;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  backdrop-filter: blur(1px); /* Blurring effect */
 }
 </style>

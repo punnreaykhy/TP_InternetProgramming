@@ -13,7 +13,14 @@ router.get('/all', async (req, res) => {
 
 router.get('/:id', auth.ensureSignedIn, async function (req, res, next) {
   const { id } = req.params;
-  res.json({});
+  const result = await priceService.findById(id);
+  res.json(result);
+})
+
+router.get('/product/:id', auth.ensureSignedIn, async function (req, res, next) {
+  const { id } = req.params;
+  const result = await priceService.findByPid(id);
+  res.json(result);
 })
 
 router.post('/create', auth.ensureSignedIn, async (req, res) => {
@@ -26,13 +33,19 @@ router.post('/create', auth.ensureSignedIn, async (req, res) => {
 router.post('/update/:id', auth.ensureSignedIn, async (req, res, next) => {
   const {price, source} = req.body
   const {id} = req.params
-  const result = priceService.update({id, price, source})
+  const result = await priceService.update({id, price, source})
   res.json(result)
 })
 
 router.post('/delete/:id', auth.ensureSignedIn, async (req, res, next) => {
   const {id} = req.params
-  const result = priceService.remove(id)
+  const result = await priceService.remove(id)
+  res.json(result);
+})
+
+router.post('/deleteAll', auth.ensureSignedIn, async (req, res, next) => {
+  const {pID} = req.body
+  const result = await priceService.removeAll(pID)
   res.json(result);
 })
 
